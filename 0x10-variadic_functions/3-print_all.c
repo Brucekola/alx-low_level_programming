@@ -3,6 +3,9 @@
 #include <stdio.h>
 /**
   * print_all - Prints anything
+  * @format: The conversion specifier to prints
+  *
+  * Return: Nothing
   */
 void print_all(const char * const format, ...)
 {
