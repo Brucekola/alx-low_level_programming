@@ -1,43 +1,37 @@
 #include "holberton.h"
-#include "main.h"
-#include <stdlib.h>
 
 /**
- * read_textfile - Reads a text file and prints it to POSIX stdout.
- * @filename: A pointer to the name of the file.
- * @letters: The number of letters the
- *           function should read and print.
+ * read_textfile - reads a text file and prints it to the POSIX std out.
+ * @filename: name of text file.
+ * @letters: no. of chars.
  *
- * Return: If the function fails or filename is NULL - 0.
- *         O/w - the actual number of bytes the function can read and print.
+ * Return: no. of leters read and printed or 0 on error.
  */
+
 ssize_t read_textfile(const char *filename, size_t letters)
 {
 	int fd;
-	ssize_t lenr, lenw;
-	char *buffer;
+	char *buf;
+	ssize_t readitems, writeitems;
 
-	if (filename == NULL)
+	if (!filename)
 		return (0);
+
+	buf = malloc(sizeof(char) * letters + 1);
+	if (!buf)
+		return (0);
+
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		return (0);
-	buffer = malloc(sizeof(char) * letters);
-	if (buffer == NULL)
-	{
-		close(fd);
-		return (0);
-	}
-	lenr = read(fd, buffer, letters);
+	readitems = read(fd, buf, letters);
+	if (readitems == -1)
+		return (free(buf), 0);
 	close(fd);
-	if (lenr == -1)
-	{
-		free(buffer);
+
+	writeitems = write(STDOUT_FILENO, buf, readitems);
+	free(buf);
+	if (writeitems != readitems)
 		return (0);
-	}
-	lenw = write(STDOUT_FILENO, buffer, lenr);
-	free(buffer);
-	if (lenr != lenw)
-		return (0);
-	return (lenw);
+	return (readitems);
 }
